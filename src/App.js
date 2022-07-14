@@ -201,15 +201,17 @@ function App() {
                 {weather.name}, {weather.sys.country}
               </div>
               <div className='date'>{dateBuilder(new Date(`${time}`)).day}</div>
-              <div className='date'>
-                {dateBuilder(new Date(`${time}`)).hours > 12
-                  ? dateBuilder(new Date(`${time}`)).hours - 12
-                  : dateBuilder(new Date(`${time}`)).hours >= 10
-                  ? dateBuilder(new Date(`${time}`)).hours
-                  : dateBuilder(new Date(`${time}`)).hours.slice(1)}
-                :{dateBuilder(new Date(`${time}`)).minutes}{' '}
-                <span>{dateBuilder(new Date(`${time}`)).hours >= 12 ? 'pm' : 'am'}</span>
-              </div>
+              {time && (
+                <div className='date'>
+                  {dateBuilder(new Date(`${time}`)).hours > 12
+                    ? dateBuilder(new Date(`${time}`)).hours - 12
+                    : dateBuilder(new Date(`${time}`)).hours >= 10
+                    ? dateBuilder(new Date(`${time}`)).hours
+                    : dateBuilder(new Date(`${time}`)).hours.slice(1)}
+                  :{dateBuilder(new Date(`${time}`)).minutes}{' '}
+                  <span>{dateBuilder(new Date(`${time}`)).hours >= 12 ? 'pm' : 'am'}</span>
+                </div>
+              )}
             </motion.div>
 
             <div className='weather-box'>
