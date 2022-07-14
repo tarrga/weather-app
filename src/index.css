@@ -1,13 +1,190 @@
-body {
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;400;600;800&display=swap');
+
+* {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+  font-family: 'poppins', sans-serif;
+}
+
+main {
+  min-height: 100vh;
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.75));
+  padding: 0 30px 30px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.app {
+  background-image: url('./assets/cold.jpg');
+  background-size: cover;
+  background-position: bottom;
+  transition: all 0.4 ease-out;
+}
+
+.app.warm {
+  background-image: url('./assets/warm.jpg');
+}
+
+.search-box {
+}
+
+.search-box .search-bar {
+  width: 100%;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border: none;
+  outline: none;
+  border-radius: 0 0 10px 10px;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+  color: #313131;
+  font-size: 20px;
+  margin-bottom: 30px;
+}
+.search-box .search-bar:focus {
+  background-color: rgba(255, 255, 255, 0.75);
+}
+
+.location-box {
+  margin-bottom: 30px;
+}
+
+.location-box .location {
+  color: #fff;
+  font-size: 32px;
+  font-weight: 500;
+  text-shadow: 2px 4px 3px rgba(0, 0, 0, 0.3);
+  margin-bottom: 10px;
+}
+
+.location-box .date {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 300;
+  text-shadow: 2px 4px 3px rgba(0, 0, 0, 0.3);
+}
+
+.location-box .date:nth-of-type(3) {
+  font-size: 55px;
+  font-weight: 600;
+  line-height: 100%;
+}
+.location-box .date:nth-of-type(3) span {
+  font-size: 24px;
+  font-weight: 300;
+  text-shadow: 2px 4px 3px rgba(0, 0, 0, 0.3);
+}
+
+.weather-box {
+  text-align: center;
+  text-transform: capitalize;
+  margin-bottom: 30px;
+}
+
+.weather-image-container {
+  margin-bottom: 30px;
+}
+
+.weather-image-container svg {
+  font-size: 146px;
+  color: #fff;
+}
+
+.weather-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 42px;
+  color: #fff;
+  /* padding: 16px; */
+  text-shadow: 2px 4px 3px rgba(0, 0, 0, 0.3);
+  font-weight: 600;
+  /* background-color: rgba(255, 255, 255, 0.1); */
+  /* border-radius: 10px; */
+  /* box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px; */
+}
+
+.weather-box .temp {
+  position: relative;
+  width: 45%;
+  text-align: start;
+  border-right: 1px solid #fff;
+}
+
+.weather-box .temp span {
+  position: absolute;
+  font-size: 16px;
+  font-weight: 200;
+  bottom: -16px;
+}
+
+.weather-box .weather {
+  width: 55%;
+  text-align: end;
+}
+
+.error-message {
+  text-align: center;
+  font-size: 55px;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 2px 4px 3px rgba(0, 0, 0, 0.3);
+}
+
+.weather-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  text-align: center;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 12px 26px;
+  border-radius: 10px;
+  max-height: 200px;
+}
+
+.weather-details .weather-daily {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.weather-details .weather-daily > * {
+  width: 30%;
+}
+
+.weather-details .weather-daily span:first-child {
+  text-align: start;
+}
+
+.weather-details .weather-daily span:last-child {
+  text-align: end;
+}
+
+/* background for different weather */
+main.clouds {
+  background-image: linear-gradient(to right bottom, rgba(51, 74, 110, 0.4), rgba(34, 150, 200, 0.75));
+}
+
+main.clear {
+  background-image: linear-gradient(to right bottom, rgba(182, 122, 107, 0.4), rgba(182, 122, 107, 0.75));
+}
+
+main.rain {
+  background-image: linear-gradient(to right bottom, rgba(88, 122, 156, 0.4), rgba(88, 122, 156, 0.75));
+}
+
+main.drizzle {
+  background-image: linear-gradient(to right bottom, rgba(14, 151, 69, 0.4), rgba(14, 151, 69, 0.75));
+}
+
+main.snow {
+  background-image: linear-gradient(to right bottom, rgba(34, 191, 240, 0.4), rgba(34, 191, 240, 0.75));
+}
+main.thunderstorm {
+  background-image: linear-gradient(to right bottom, rgba(146, 39, 143, 0.4), rgba(146, 39, 143, 0.75));
 }
