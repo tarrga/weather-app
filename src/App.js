@@ -20,9 +20,9 @@ const weatherApi = {
   base: 'https://api.openweathermap.org/data/2.5/',
 };
 
-const geoNamesApi = {
-  userName: 'tg88',
-  base: 'http://api.geonames.org/',
+const apiGeolocation = {
+  key: '440dee3a89fc4a569b4084a8b6701428',
+  base: 'https://api.ipgeolocation.io/',
 };
 
 function App() {
@@ -30,61 +30,39 @@ function App() {
   const [weather, setWeather] = useState(null);
   const [weatherDetails, setWeatherDetails] = useState(null);
   const [error, setError] = useState(null);
-  const [latLng, setLatLng] = useState(null);
   const [time, setTime] = useState(null);
   const [sun, setSun] = useState(null);
 
-  //useEffect for set the latitude and longitude
+  //get current time in the city and sunrise value
   useEffect(() => {
     if (!weather) return;
-    setLatLng({
-      lat: weather.coord.lat,
-      lng: weather.coord.lon,
-    });
-  }, [weather]);
-
-  //useEffect for getting the accurate time and sunrise for the city
-  useEffect(() => {
-    if (!latLng) return;
     setError(null);
-    const getGeoData = async () => {
+    const getCurrentTime = async () => {
       try {
         const data = await fetch(
-          `${geoNamesApi.base}timezoneJSON?lat=${latLng.lat}&lng=${latLng.lng}&username=${geoNamesApi.userName}`
+          `${apiGeolocation.base}timezone?apiKey=${apiGeolocation.key}&lat=${weather.coord.lat}&long=${weather.coord.lon}`
         );
-        if (!data.ok) {
-          throw new Error('Something went wrong');
-        }
+        if (!data.ok) throw new Error('Something went wrong');
         const result = await data.json();
-        if (result.status) {
-          throw new Error('Exceeded the max limit');
-        }
-        console.log(result);
-        setTime(result.time + ':00');
-        setSun((prev) => {
-          if (result.sunrise + ':00' < result.time + ':00' && result.sunset + ':00' > result.time + ':00') {
-            return true;
-          } else {
-            return false;
-          }
-        });
+        setTime(result.date_time);
+        setSun(
+          weather.sys.sunrise < result.date_time_unix && weather.sys.sunset > result.date_time_unix ? true : false
+        );
       } catch (error) {
-        setTime(new Date());
-        setSun(true);
         setError(error.message);
       }
     };
-    getGeoData();
-  }, [latLng]);
+    getCurrentTime();
+  }, [weather]);
 
   // weather details
   useEffect(() => {
-    if (!latLng) return;
+    if (!weather) return;
     setError(null);
     const fetchDetails = async () => {
       try {
         const data = await fetch(
-          `${weatherApi.base}forecast?lat=${latLng.lat}&lon=${latLng.lng}&units=metric&appid=${weatherApi.key}`
+          `${weatherApi.base}forecast?lat=${weather.coord.lat}&lon=${weather.coord.lon}&units=metric&appid=${weatherApi.key}`
         );
         const result = await data.json();
         if (!data.ok) {
@@ -96,13 +74,11 @@ function App() {
         console.log(result);
         setWeatherDetails(result);
       } catch (error) {
-        setTime(new Date());
-        setSun(true);
         setError(error.message);
       }
     };
     fetchDetails();
-  }, [latLng]);
+  }, [weather]);
 
   const search = async (e) => {
     if (e.key === 'Enter' && e.target.value.length > 0) {

@@ -23,14 +23,12 @@ main {
   background-image: url('./assets/cold.jpg');
   background-size: cover;
   background-position: bottom;
-  transition: all 0.4 ease-out;
+  max-width: 576px;
+  margin: 0 auto;
 }
 
 .app.warm {
   background-image: url('./assets/warm.jpg');
-}
-
-.search-box {
 }
 
 .search-box .search-bar {
