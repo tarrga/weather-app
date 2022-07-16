@@ -1,7 +1,7 @@
-function WeatherDaily({ hour, icon, degree }) {
+function WeatherDaily({ day, icon, degree }) {
   return (
     <div className='weather-daily'>
-      <span>{hour}</span>
+      <span>{day}</span>
       <div>{icon}</div>
       <span>{degree}</span>
     </div>

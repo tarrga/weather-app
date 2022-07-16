@@ -71,7 +71,20 @@ function App() {
         if (result.status) {
           throw new Error('Exceeded the max limit, try again later');
         }
-        console.log(result);
+        result.list = result.list.map((list) => {
+          return {
+            ...list,
+            weatherStatus: {
+              Snow: 0,
+              Rain: 0,
+              Clouds: 0,
+              Thunderstorm: 0,
+              Clear: 0,
+              Drizzle: 0,
+              Rest: 0,
+            },
+          };
+        });
         setWeatherDetails(result);
       } catch (error) {
         setError(error.message);
@@ -129,6 +142,7 @@ function App() {
       year,
       hours,
       minutes,
+      monthNumher: d.getMonth(),
     };
   };
 
@@ -216,13 +230,37 @@ function App() {
             </div>
             <div className='weather-details'>
               {weatherDetails?.list
-                .filter((detail, i) => detail.dt_txt.slice(11, 19) === '15:00:00')
+                .filter((detail, i) => new Date(detail.dt_txt).getDate() <= dateBuilder(new Date(`${time}`)).date + 3)
+                .map((detail, i, arr) => {
+                  const indexOfArry = new Date(detail.dt_txt).getDate() - dateBuilder(new Date(`${time}`)).date;
+                  //check for min and max temp
+                  if (arr[indexOfArry].main.temp_min > detail.main.temp_min) {
+                    arr[indexOfArry].main.temp_min = detail.main.temp_min;
+                  }
+                  if (arr[indexOfArry].main.temp_max < detail.main.temp_max) {
+                    arr[indexOfArry].main.temp_max = detail.main.temp_max;
+                  }
+
+                  // add new dates for the first four element
+                  detail.newDate = dateBuilder(new Date(new Date(detail.dt_txt).getTime() + i * (1000 * 60 * 60 * 24)));
+
+                  //add weather status for each day
+                  arr[indexOfArry].weatherStatus[detail.weather[0].main || 'Drizzle'] += 1;
+
+                  return detail;
+                })
                 .slice(0, 4)
                 .map((detail, i) => (
                   <WeatherDaily
                     key={detail.dt_txt}
-                    hour={i === 0 ? 'Today' : dateBuilder(new Date(detail.dt_txt)).day}
-                    icon={icon(detail.weather[0].main, true)}
+                    day={i === 0 ? 'Today' : detail.newDate.day}
+                    icon={icon(
+                      // check which weather status is the most common
+                      Object.keys(detail.weatherStatus).reduce((a, b) =>
+                        detail.weatherStatus[a] > detail.weatherStatus[b] ? a : b
+                      ),
+                      true
+                    )}
                     degree={`${Math.round(detail.main.temp_min)}°-${Math.round(detail.main.temp_max)}°`}
                   />
                 ))}
