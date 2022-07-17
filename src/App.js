@@ -263,7 +263,7 @@ function App() {
                     arr[indexOfArry].main.temp_max_new = detail.main.temp_max * 1;
                   }
                   // add new dates for the first four element
-                  detail.newDate = dateBuilder(new Date(new Date(detail.dt_txt).getTime() + i * (1000 * 60 * 60 * 24)));
+                  detail.newDate = dateBuilder(new Date(new Date(detail.dt_txt).getTime() + i * (1000 * 60 * 59 * 24)));
 
                   //add weather status for each day
                   arr[indexOfArry].weatherStatus[detail.weather[0].main || 'Drizzle'] += 1;
@@ -274,9 +274,7 @@ function App() {
                 .map((detail, i, arr) => (
                   <WeatherDaily
                     key={detail.dt}
-                    day={
-                      i === 0 && detail.newDate.day === dateBuilder(new Date(time)).day ? 'Today' : detail.newDate.day
-                    }
+                    day={i === 0 ? 'Today' : detail.newDate.day}
                     icon={icon(
                       // check which weather status is the most common
                       Object.keys(detail.weatherStatus).reduce((a, b) =>
