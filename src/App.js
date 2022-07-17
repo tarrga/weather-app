@@ -32,6 +32,7 @@ function App() {
   const [error, setError] = useState(null);
   const [time, setTime] = useState(null);
   const [sun, setSun] = useState(null);
+  const [allDetails, setAllDetails] = useState(null);
 
   //get current time in the city and sunrise value
   useEffect(() => {
@@ -71,27 +72,37 @@ function App() {
         if (result.status) {
           throw new Error('Exceeded the max limit, try again later');
         }
-        result.list = result.list.map((list) => {
-          return {
-            ...list,
-            weatherStatus: {
-              Snow: 0,
-              Rain: 0,
-              Clouds: 0,
-              Thunderstorm: 0,
-              Clear: 0,
-              Drizzle: 0,
-              Rest: 0,
-            },
-          };
-        });
+        result.changedList = result.list
+          .filter((detail, i) => {
+            console.log('Detail', new Date(new Date(detail.dt_txt).setHours(0, 0, 0, 0)));
+            console.log('Current', new Date(new Date(time) + 3 * 1000 * 60 * 60 * 24).setHours(0, 0, 0, 0));
+            return (
+              new Date(detail.dt_txt).setHours(0, 0, 0, 0) <=
+              new Date(new Date(time)).setHours(0, 0, 0, 0) + 3 * 1000 * 60 * 60 * 24
+            );
+          })
+          .map((el, i, arr) => {
+            return {
+              ...el,
+              dt_txt: new Date(el.dt_txt).toDateString(),
+              weatherStatus: {
+                Snow: 0,
+                Rain: 0,
+                Clouds: 0,
+                Thunderstorm: 0,
+                Clear: 0,
+                Drizzle: 0,
+                Rest: 0,
+              },
+            };
+          });
         setWeatherDetails(result);
       } catch (error) {
         setError(error.message);
       }
     };
     fetchDetails();
-  }, [weather]);
+  }, [weather, time]);
 
   const search = async (e) => {
     if (e.key === 'Enter' && e.target.value.length > 0) {
@@ -229,18 +240,28 @@ function App() {
               </motion.div>
             </div>
             <div className='weather-details'>
-              {weatherDetails?.list
-                .filter((detail, i) => new Date(detail.dt_txt).getDate() <= dateBuilder(new Date(`${time}`)).date + 3)
-                .map((detail, i, arr) => {
-                  const indexOfArry = new Date(detail.dt_txt).getDate() - dateBuilder(new Date(`${time}`)).date;
-                  //check for min and max temp
-                  if (arr[indexOfArry].main.temp_min > detail.main.temp_min) {
-                    arr[indexOfArry].main.temp_min = detail.main.temp_min;
-                  }
-                  if (arr[indexOfArry].main.temp_max < detail.main.temp_max) {
-                    arr[indexOfArry].main.temp_max = detail.main.temp_max;
-                  }
+              {weatherDetails?.changedList
 
+                .map((detail, i, arr) => {
+                  let indexOfArry =
+                    (new Date(detail.dt_txt) - new Date(time).setHours(0, 0, 0, 0)) / 1000 / 60 / 60 / 24;
+                  console.log('index', indexOfArry);
+                  // console.log(indexOfArry);
+                  // console.log(new Date(detail.dt_txt).getTime());
+                  // console.log(new Date(time).setHours(0, 0, 0, 0));
+                  //check for min and max temperature
+                  if (
+                    arr[indexOfArry].main.temp_min_new > detail.main.temp_min ||
+                    typeof arr[indexOfArry].main.temp_min_new === 'undefined'
+                  ) {
+                    arr[indexOfArry].main.temp_min_new = detail.main.temp_min * 1;
+                  }
+                  if (
+                    arr[indexOfArry].main.temp_max_new < detail.main.temp_max ||
+                    typeof arr[indexOfArry].main.temp_max_new === 'undefined'
+                  ) {
+                    arr[indexOfArry].main.temp_max_new = detail.main.temp_max * 1;
+                  }
                   // add new dates for the first four element
                   detail.newDate = dateBuilder(new Date(new Date(detail.dt_txt).getTime() + i * (1000 * 60 * 60 * 24)));
 
@@ -250,10 +271,12 @@ function App() {
                   return detail;
                 })
                 .slice(0, 4)
-                .map((detail, i) => (
+                .map((detail, i, arr) => (
                   <WeatherDaily
-                    key={detail.dt_txt}
-                    day={i === 0 ? 'Today' : detail.newDate.day}
+                    key={detail.dt}
+                    day={
+                      i === 0 && detail.newDate.day === dateBuilder(new Date(time)).day ? 'Today' : detail.newDate.day
+                    }
                     icon={icon(
                       // check which weather status is the most common
                       Object.keys(detail.weatherStatus).reduce((a, b) =>
@@ -261,7 +284,7 @@ function App() {
                       ),
                       true
                     )}
-                    degree={`${Math.round(detail.main.temp_min)}°-${Math.round(detail.main.temp_max)}°`}
+                    degree={`${Math.round(detail.main.temp_min_new)}°-${Math.round(detail.main.temp_max_new)}°`}
                   />
                 ))}
             </div>
