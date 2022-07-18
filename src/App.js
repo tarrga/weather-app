@@ -84,7 +84,7 @@ function App() {
           .map((el, i, arr) => {
             return {
               ...el,
-              dt_txt: new Date(new Date(el.dt_txt).getTime()).toDateString(),
+              dt_txt: new Date(new Date(el.dt_txt).getTime() + weather.timezone * 1000).toDateString(),
               weatherStatus: {
                 Snow: 0,
                 Rain: 0,
@@ -251,8 +251,8 @@ function App() {
                   // console.log(new Date(time).setHours(0, 0, 0, 0));
                   //check for min and max temperature
                   if (indexOfArry === 0) {
-                    arr[0].main.temp_min_new = weather.main.temp;
-                    arr[0].main.temp_max_new = weather.main.temp;
+                    arr[0].main.temp_min_new = weather?.main.temp;
+                    arr[0].main.temp_max_new = weather?.main.temp;
                   }
                   if (
                     arr[indexOfArry].main.temp_min_new > detail.main.temp_min ||
