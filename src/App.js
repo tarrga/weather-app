@@ -84,7 +84,7 @@ function App() {
           .map((el, i, arr) => {
             return {
               ...el,
-              dt_txt: new Date(new Date(el.dt_txt).getTime() - weather.timezone).toDateString(),
+              dt_txt: new Date(new Date(el.dt_txt).getTime()).toDateString(),
               weatherStatus: {
                 Snow: 0,
                 Rain: 0,
@@ -268,8 +268,8 @@ function App() {
                     arr[indexOfArry].main.temp_max_new = detail.main.temp_max * 1;
                   }
                   // add new dates for the first four element
-                  console.log(dateBuilder(new Date(new Date(detail.dt_txt).getTime())));
-                  detail.newDate = dateBuilder(new Date(new Date(detail.dt_txt).getTime() + i * (1000 * 60 * 60 * 24)));
+                  console.log(i, dateBuilder(new Date(new Date(detail.dt_txt).getTime() + i * (1000 * 60 * 60 * 24))));
+                  detail.newDate = dateBuilder(new Date(new Date(arr[0].dt_txt).getTime() + i * (1000 * 60 * 60 * 24)));
 
                   //add weather status for each day
                   arr[indexOfArry].weatherStatus[detail.weather[0].main || 'Drizzle'] += 1;
