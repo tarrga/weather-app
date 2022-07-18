@@ -263,7 +263,7 @@ function App() {
                     arr[indexOfArry].main.temp_max_new = detail.main.temp_max * 1;
                   }
                   // add new dates for the first four element
-                  detail.newDate = dateBuilder(new Date(new Date(detail.dt_txt).getTime() + i * (1000 * 60 * 59 * 24)));
+                  detail.newDate = dateBuilder(new Date(new Date(detail.dt_txt).getTime() + i * (1000 * 60 * 60 * 24)));
 
                   //add weather status for each day
                   arr[indexOfArry].weatherStatus[detail.weather[0].main || 'Drizzle'] += 1;
