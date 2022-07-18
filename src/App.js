@@ -250,12 +250,17 @@ function App() {
                   // console.log(new Date(detail.dt_txt).getTime());
                   // console.log(new Date(time).setHours(0, 0, 0, 0));
                   //check for min and max temperature
+                  if (indexOfArry === 0) {
+                    arr[0].main.temp_min_new = weather.main.temp;
+                    arr[0].main.temp_max_new = weather.main.temp;
+                  }
                   if (
                     arr[indexOfArry].main.temp_min_new > detail.main.temp_min ||
                     typeof arr[indexOfArry].main.temp_min_new === 'undefined'
                   ) {
                     arr[indexOfArry].main.temp_min_new = detail.main.temp_min * 1;
                   }
+                  //max
                   if (
                     arr[indexOfArry].main.temp_max_new < detail.main.temp_max ||
                     typeof arr[indexOfArry].main.temp_max_new === 'undefined'
