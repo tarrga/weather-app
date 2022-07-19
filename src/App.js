@@ -259,14 +259,15 @@ function App() {
             </div>
             {/* daily details */}
             <div className='weather-details'>
-              {weatherDetails.renderingList.map((day, i) => (
-                <WeatherDaily
-                  key={day.date}
-                  day={i === 0 ? 'Today' : dateBuilder(new Date(day.date)).day}
-                  icon={icon(day.type, true)}
-                  degree={`${Math.floor(day.min_temp)}°-${Math.ceil(day.max_temp)}°`}
-                />
-              ))}
+              {weatherDetails &&
+                weatherDetails.renderingList.map((day, i) => (
+                  <WeatherDaily
+                    key={day.date}
+                    day={i === 0 ? 'Today' : dateBuilder(new Date(day.date)).day}
+                    icon={icon(day.type, true)}
+                    degree={`${Math.floor(day.min_temp)}°-${Math.ceil(day.max_temp)}°`}
+                  />
+                ))}
             </div>
           </>
         )}
